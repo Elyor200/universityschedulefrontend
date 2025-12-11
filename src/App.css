@@ -1,3 +1,9 @@
+*{
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
 .add-form-container {
     padding: 20px;
     display: flex;

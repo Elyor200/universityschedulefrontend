@@ -1,0 +1,81 @@
+.app-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+}
+
+.header-name h3 {
+    justify-content: center;
+    text-align: center;
+    color: #333;
+    font-size: 32px;
+    margin: 0;
+    padding: 20px;
+}
+
+.user-info-container span {
+    font-weight: bold;
+    background-color: rgba(255,255,255,0.2);
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.dashboard-container {
+    max-width: 900px;
+    align-items: self-start;
+    padding: 20px;
+}
+
+.dashboard-container h1 {
+    margin: 0;
+    padding-bottom: 20px;
+}
+
+.user-info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+    background-color: #f3f4f6;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.user-info-container:hover {
+    transform: scale(1.01);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+
+}
+
+.user-info-card h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #1e40af;
+}
+
+.user-info-card p {
+    margin: 5px 0;
+    font-size: 1rem;
+    color: #333;
+}
+
+.user-info-card b {
+    color: #111827; /* darker text for label */
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .app-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .dashboard-container {
+        padding: 10px;
+    }
+}

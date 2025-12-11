@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Layout from "../components/Layout/Layout";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Students from "../pages/Students/Students";
@@ -8,6 +8,8 @@ import Rooms from "../pages/Rooms/Rooms";
 import Schedule from "../pages/Schedule/Schedule";
 import {ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Login from "../login/Login";
+import ProtectedRoute from "./ProtectedRoute";
 
 export default function AppRouter() {
     return (
@@ -20,17 +22,76 @@ export default function AppRouter() {
                 closeOnClick
                 pauseOnHover
             />
+            <Routes>
+                <Route path="/" element={<Login/>}/>
 
-            <Layout>
-                <Routes>
-                    <Route path="/" element={<Dashboard/>} />
-                    <Route path="/students" element={<Students/>} />
-                    <Route path="/professors" element={<Professors/>} />
-                    <Route path="/courses" element={<Courses/>} />
-                    <Route path="/rooms" element={<Rooms/>} />
-                    <Route path="/schedule" element={<Schedule/>} />
-                </Routes>
-            </Layout>
+
+                <Route
+                    path="/dashboard"
+                    element={
+                        <ProtectedRoute>
+                            <Layout>
+                                <Dashboard/>
+                            </Layout>
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/students"
+                    element={
+                        <ProtectedRoute>
+                            <Layout>
+                                <Students/>
+                            </Layout>
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/professors"
+                    element={
+                        <ProtectedRoute>
+                            <Layout>
+                                <Professors/>
+                            </Layout>
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/courses"
+                    element={
+                        <ProtectedRoute>
+                            <Layout>
+                                <Courses/>
+                            </Layout>
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/rooms"
+                    element={
+                        <ProtectedRoute>
+                            <Layout>
+                                <Rooms/>
+                            </Layout>
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/schedule"
+                    element={
+                        <ProtectedRoute>
+                            <Layout>
+                                <Schedule/>
+                            </Layout>
+                        </ProtectedRoute>
+                    }
+                />
+            </Routes>
         </BrowserRouter>
-    )
+    );
 }

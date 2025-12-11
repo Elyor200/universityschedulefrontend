@@ -3,18 +3,22 @@ import "./Sidebar.css";
 
 
 export default function Sidebar() {
+    const role = localStorage.getItem("role");
+
     return (
         <div className="sidebar">
-            <div className="sidebar-title">University Admin</div>
+            <div className="sidebar-title"></div>
 
             <nav className="sidebar-menu">
-                <NavLink to="/" className="menu-item">
+                <NavLink to="/dashboard" className="menu-item">
                     Dashboard
                 </NavLink>
 
-                <NavLink to="/students" className="menu-item">
-                    Students
-                </NavLink>
+                {role === "PROFESSOR" && (
+                    <NavLink to="/students" className="menu-item">
+                        Students
+                    </NavLink>
+                )}
 
                 <NavLink to="/professors" className="menu-item">
                     Professors

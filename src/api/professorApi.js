@@ -4,6 +4,11 @@ const professorApi = {
     createProfessor: (data) => axiosClient.post(`/v1/professor/create-professor`, data),
     getProfessorById: (id) => axiosClient.get(`/v1/professor/getProfessorById/${id}`),
     getAllProfessors: () => axiosClient.get(`/v1/professor/getAllProfessors`),
+    getAllProfessorsByStudentId: (studentId) => axiosClient.get(`/v1/professor/getAllProfessorsByStudentId`, {
+        params: {
+            studentId: studentId,
+        }
+    })
 }
 
 export default professorApi

@@ -10,6 +10,8 @@ export default function Courses() {
     const [professors, setProfessors] = useState([])
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const [enrolledCourses, setEnrolledCourses] = useState([]);
+    const role = localStorage.getItem("role");
 
     const [form, setForm] = useState({
         courseName: "",
@@ -24,10 +26,18 @@ export default function Courses() {
 
     const fetchData = async () => {
         try {
-            const response = await courseApi.getAllCourses();
-            const profRes = await professorApi.getAllProfessors();
-            setProfessors(profRes.data);
-            setCourses(response.data);
+            if (role === "PROFESSOR") {
+                const id = Number(localStorage.getItem("id"));
+                const email = localStorage.getItem("email");
+                const response = await courseApi.getAllCoursesByProfessor(id, email);
+                const profRes = await professorApi.getAllProfessors();
+                setProfessors(profRes.data);
+                setCourses(response.data);
+            } else if (role === "STUDENT"){
+                const studentId = localStorage.getItem("studentId");
+                const enrolledStudentsResponse = await courseApi.getAllEnrolledCoursesByStudentId(studentId);
+                setEnrolledCourses(enrolledStudentsResponse.data);
+            }
         } catch (error) {
             console.log(error);
         } finally {
@@ -67,14 +77,16 @@ export default function Courses() {
 
     return (
         <div className="courses-page">
+            <h2>MY COURSES</h2>
             <div className="page-header">
-                <h2>Courses</h2>
-                <button
-                    className="add-btn"
-                    onClick={() => setShowModal(true)}
-                >
-                    + Add Course
-                </button>
+                {role === "ADMIN" && (
+                    <button
+                        className="add-btn"
+                        onClick={() => setShowModal(true)}
+                    >
+                        + Add Course
+                    </button>
+                )}
             </div>
 
             {loading ? (
@@ -83,16 +95,27 @@ export default function Courses() {
                 <table className="course-table">
                     <thead>
                     <tr>
-                        <th>Course ID</th>
-                        <th>Course Name</th>
-                        <th>Course Code</th>
-                        <th>Credit Hours</th>
-                        <th>Professor</th>
+                        <th>COURSE ID</th>
+                        <th>COURSE NAME</th>
+                        <th>COURSE CODE</th>
+                        <th>CREDIT HOURS</th>
+                        <th>PROFESSOR</th>
                     </tr>
                     </thead>
 
                     <tbody>
                     {courses.map((p) => (
+                        <tr key={p.course_id}>
+                            <td>{p.course_id}</td>
+                            <td>{p.course_name}</td>
+                            <td>{p.course_code}</td>
+                            <td>{p.credit_hours}</td>
+                            <td>{p.professor?.first_name} {p.professor?.last_name}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                    <tbody>
+                    {enrolledCourses.map((p) => (
                         <tr key={p.course_id}>
                             <td>{p.course_id}</td>
                             <td>{p.course_name}</td>

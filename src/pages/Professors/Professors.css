@@ -1,7 +1,13 @@
 .professors-page {
-    background: #fff;
     padding: 20px;
     border-radius: 10px;
+}
+
+.professors-page h2 {
+    text-align: center;
+    color: #333;
+    font-size: 32px;
+    margin: 0;
 }
 
 .page-header {
@@ -34,6 +40,14 @@
     transition: background 0.25s ease;
 }
 
+.prof-table td {
+    color: #555;
+}
+
+.prof-table tbody tr:hover td {
+    color: black;
+}
+
 .prof-table tbody tr:hover {
     background-color: rgba(223, 221, 221, 0.15);
     cursor: pointer;
@@ -52,7 +66,6 @@
 }
 
 
-/* Add button */
 .add-btn {
     background: #4c8bf5;
     color: white;
@@ -67,7 +80,6 @@
     background: #3a78dc;
 }
 
-/* Modal overlay */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -80,13 +92,12 @@
     justify-content: center;
 }
 
-/* Modal card */
 .modal-card {
     background: #fff;
     padding: 25px;
     width: 350px;
     border-radius: 10px;
-    box-shadow: 0px 5px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
 }
 
 .modal-card h3 {
@@ -94,7 +105,6 @@
     text-align: center;
 }
 
-/* Form */
 .modal-form {
     display: flex;
     flex-direction: column;

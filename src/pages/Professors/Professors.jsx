@@ -7,6 +7,7 @@ export default function Professors() {
     const [professors, setProfessors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const role = localStorage.getItem("role");
 
     const [form, setForm] = useState({
         firstName: "",
@@ -14,16 +15,26 @@ export default function Professors() {
         email: "",
     });
 
-    const fetchData = async () => {
-        try {
-            const response = await professorApi.getAllProfessors();
-            setProfessors(response.data);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (role === "PROFESSORS") {
+                    const response = await professorApi.getAllProfessors();
+                    setProfessors(response.data);
+                } else if (role === "STUDENT") {
+                    const studentId = Number(localStorage.getItem("id"));
+                    const response = await professorApi.getAllProfessorsByStudentId(studentId);
+                    setProfessors(response.data);
+                }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
         }
-    };
+
+        void fetchData();
+    }, [role]);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -34,7 +45,6 @@ export default function Professors() {
 
         try {
             await professorApi.createProfessor(form);
-            await fetchData();
             setShowModal(false);
             setForm({firstName: "", lastName: "", email: "", });
         } catch (error) {
@@ -43,20 +53,18 @@ export default function Professors() {
         }
     }
 
-    useEffect(() => {
-        void fetchData();
-    }, []);
-
     return (
         <div className="professors-page">
+            <h2>PROFESSORS</h2>
             <div className="page-header">
-                <h2>Professors</h2>
-                <button
-                    className="add-btn"
-                    onClick={() => setShowModal(true)}
-                >
-                    + Add Professor
-                </button>
+                {role === "ADMIN" && (
+                    <button
+                        className="add-btn"
+                        onClick={() => setShowModal(true)}
+                    >
+                        + Add Professor
+                    </button>
+                )}
             </div>
 
             {loading ? (
@@ -65,10 +73,10 @@ export default function Professors() {
                 <table className="prof-table">
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
+                        <th>PROFESSOR ID</th>
+                        <th>FIRST NAME</th>
+                        <th>LAST NAME</th>
+                        <th>EMAIL</th>
                     </tr>
                     </thead>
 
