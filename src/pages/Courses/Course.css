@@ -12,7 +12,7 @@
 
 .page-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     margin-bottom: 20px;
     align-items: center;
 }
@@ -56,7 +56,8 @@
 .course-table td {
     padding: 12px;
     color: #555;
-    border-bottom: 1px solid #eee;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
 }
 
 .add-btn {
@@ -69,9 +70,6 @@
     font-size: 15px;
 }
 
-.add-btn:hover {
-    background: #3a78dc;
-}
 
 /* Modal overlay */
 .modal-overlay {
@@ -90,9 +88,9 @@
 .modal-card {
     background: #fff;
     padding: 25px;
-    width: 350px;
+    width: 450px;
     border-radius: 10px;
-    box-shadow: 0px 5px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
 }
 
 .modal-card h3 {

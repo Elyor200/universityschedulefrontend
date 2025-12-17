@@ -1,10 +1,13 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
 import "./Dashboard.css";
+import courseApi from "../../api/courseApi";
 
 
 export default function Dashboard() {
     const [user, setUser] = useState(null);
+    const [course, setCourse] = useState([]);
+
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -20,10 +23,21 @@ export default function Dashboard() {
                 const {id, email} = res.data;
                 localStorage.setItem("role", res.data.role);
                 localStorage.setItem("studentId", res.data.studentId);
+                localStorage.setItem("professorId", res.data.id);
                 localStorage.setItem("id", id)
                 localStorage.setItem("email", email);
             })
             .catch(err => console.log(err));
+    }, []);
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            const email = localStorage.getItem("email");
+            const id = localStorage.getItem("id");
+            const courseResponse = await courseApi.getAllCoursesByProfessor(id, email);
+            setCourse(courseResponse.data);
+        };
+        void fetchCourses();
     }, []);
 
     if (!user) {
@@ -62,6 +76,16 @@ export default function Dashboard() {
                     </div>
                     <div>
                         <span>{user.role}</span>
+                    </div>
+                </div>
+                <div className="course-info-container">
+                    <div className="course-info-card">
+                        {course.map((p) => (
+                            <div key={p.course_id}>
+                                <h2>{p.course_name}</h2>
+                                <p>{p.course_code}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>

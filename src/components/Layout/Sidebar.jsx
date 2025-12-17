@@ -20,9 +20,11 @@ export default function Sidebar() {
                     </NavLink>
                 )}
 
-                <NavLink to="/professors" className="menu-item">
-                    Professors
-                </NavLink>
+                {role === "STUDENT" && (
+                    <NavLink to="/professors" className="menu-item">
+                        Professors
+                    </NavLink>
+                )}
 
                 <NavLink to="/courses" className="menu-item">
                     Courses

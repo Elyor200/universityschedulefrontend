@@ -1,4 +1,5 @@
 import axiosClient from "./axiosClient";
+import {data} from "react-router-dom";
 
 const courseApi = {
     createCourse: (data) => axiosClient.post(`/v1/course/create-course`, data),
@@ -14,7 +15,9 @@ const courseApi = {
             professorId: id,
             email: email,
         }
-    })
+    }),
+
+    enrollToCourse: (data) => axiosClient.post(`/v1/course/enroll-to-course`, data),
 }
 
 export default courseApi;

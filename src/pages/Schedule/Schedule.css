@@ -39,6 +39,99 @@
     color: #555;
 }
 
+.create-schedule-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 2rem;
+}
+
+.schedule-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.schedule-modal-card {
+    background: #ffffff;
+    width: 400px;
+    border-radius: 14px;
+    margin: 0;
+    padding: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    animation: modalFadeIn 0.25s ease;
+}
+
+.schedule-modal-card h3 {
+    margin-bottom: 18px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1e293b;
+    text-align: center;
+}
+
+.schedule-modal-form {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+}
+
+.schedule-modal-form input {
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.schedule-modal-form input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.schedule-modal-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.schedule-modal-actions button {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.schedule-modal-actions .submit {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+.schedule-modal-actions .submit:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+/* Cancel */
+.schedule-modal-actions .cancel {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+.schedule-modal-actions .cancel:hover {
+    background-color: #d1d5db;
+}
+
 @media (max-width: 768px) {
     .schedule-container {
         padding: 10px;

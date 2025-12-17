@@ -3,6 +3,8 @@ import courseApi from "../../api/courseApi";
 import "./Course.css"
 import professorApi from "../../api/professorApi";
 import {toast} from "react-toastify";
+import scheduleApi from "../../api/scheduleApi";
+import {all} from "axios";
 
 
 export default function Courses() {
@@ -11,6 +13,10 @@ export default function Courses() {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [enrolledCourses, setEnrolledCourses] = useState([]);
+    const [selectedCourse, setSelectedCourse] = useState(null);
+    const [schedules, setSchedules] = useState([]);
+    const [selectedSchedule, setSelectedSchedule] = useState(null);
+    const [allCourses, setAllCourses] = useState([]);
     const role = localStorage.getItem("role");
 
     const [form, setForm] = useState({
@@ -34,12 +40,17 @@ export default function Courses() {
                 setProfessors(profRes.data);
                 setCourses(response.data);
             } else if (role === "STUDENT"){
-                const studentId = localStorage.getItem("studentId");
+                const studentId = Number(localStorage.getItem("id"));
+                // const studentId = localStorage.getItem("studentId");
                 const enrolledStudentsResponse = await courseApi.getAllEnrolledCoursesByStudentId(studentId);
                 setEnrolledCourses(enrolledStudentsResponse.data);
+
+                const allCoursesRes = await courseApi.getAllCourses();
+                setAllCourses(allCoursesRes.data);
             }
         } catch (error) {
             console.log(error);
+            toast.error(error.message);
         } finally {
             setLoading(false);
         }
@@ -74,17 +85,48 @@ export default function Courses() {
     }, []);
 
 
+    const loadSchedules = async (courseId) => {
+        try {
+            setSelectedCourse(courseId);
+            const res = await scheduleApi.getAllSchedulesByCourseId(courseId);
+            setSchedules(res.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleEnroll = async (e) => {
+        e.preventDefault();
+        if (!selectedSchedule) {
+            toast.error("Please select a schedule");
+            return;
+        }
+        try {
+            const studentId = localStorage.getItem("id");
+            await courseApi.enrollToCourse({ studentId, scheduleId: selectedSchedule });
+            toast.success("Enroll success");
+            setShowModal(false);
+            setSelectedCourse(null);
+            setSelectedSchedule(null);
+            setSchedules([]);
+            const enrolledRes = await courseApi.getAllEnrolledCoursesByStudentId(studentId);
+            setEnrolledCourses(enrolledRes.data);
+        } catch (err) {
+            const errorMessage = err.response?.data?.message;
+            toast.error(errorMessage);
+        }
+    };
 
     return (
         <div className="courses-page">
             <h2>MY COURSES</h2>
             <div className="page-header">
-                {role === "ADMIN" && (
+                {role === "STUDENT" && (
                     <button
                         className="add-btn"
                         onClick={() => setShowModal(true)}
                     >
-                        + Add Course
+                        + Enroll
                     </button>
                 )}
             </div>
@@ -128,63 +170,57 @@ export default function Courses() {
                 </table>
             )}
 
-            {showModal && (
+            {showModal && role === "STUDENT" && (
                 <div className="modal-overlay">
                     <div className="modal-card">
-                        <h3>Add Course</h3>
+                        <h3>Enroll in Course</h3>
+                        <form onSubmit={handleEnroll} className="modal-form">
 
-                        <form onSubmit={handleAddCourse} className="modal-form">
-                            <input
-                                name="courseName"
-                                placeholder="Course Name"
-                                value={form.courseName}
-                                onChange={handleChange}
-                                required
-                            />
-
-                            <input
-                                name="courseCode"
-                                placeholder="Course Code"
-                                value={form.courseCode}
-                                onChange={handleChange}
-                                required
-                            />
-
-                            <input
-                                name="creditHours"
-                                placeholder="Credit Hours"
-                                value={form.creditHours}
-                                onChange={handleChange}
-                                required
-                            />
-
+                            <label>Courses</label>
                             <select
-                                name="professorSelect"
-                                onChange={(e ) => {
-                                    const selected = professors.find(
-                                        prof => prof.professor_id === Number(e.target.value)
-                                    );
-                                    setForm({
-                                        ...form,
-                                        professor: {
-                                            first_name: selected.first_name,
-                                            lastName: selected.lastName,
-                                            email: selected.email,
-                                        }
-                                    });
+                                value={selectedCourse || ""}
+                                onChange={async (e) => {
+                                    const courseId = e.target.value;
+                                    setSelectedCourse(courseId);
+                                    if (courseId) {
+                                        const res = await scheduleApi.getAllSchedulesByCourseId(courseId);
+                                        setSchedules(res.data);
+                                    } else {
+                                        setSchedules([]);
+                                    }
                                 }}
+                                required
                             >
-                                <option value="">Select Professor</option>
-                                {professors.map((p) => (
-                                    <option key={p.professor_id} value={p.professor_id}>
-                                        {p.first_name} {p.last_name} {p.email}
+                                <option value="">Select Course</option>
+                                {allCourses.map((c) => (
+                                    <option key={c.course_id} value={c.course_id}>
+                                        {c.course_name} ({c.course_code})
                                     </option>
                                 ))}
                             </select>
 
+                            {schedules.length > 0 && (
+                                <>
+                                    <label>Schedule</label>
+                                    <select
+                                        value={selectedSchedule || ""}
+                                        onChange={(e) => setSelectedSchedule(e.target.value)}
+                                        required
+                                    >
+                                        <option value="">Select Schedule</option>
+                                        {schedules.map((s) => (
+                                            <option key={s.id} value={s.id}>
+                                                {s.dayOfWeek} {s.startTime}-{s.endTime}
+                                                {" "} (Room: {s.roomDTO?.room_number})
+                                            </option>
+                                        ))}
+                                    </select>
+                                </>
+                            )}
+
                             <div className="modal-actions">
-                                <button className="submit" type="submit">Save</button>
-                                <button className="cancel" onClick={() => setShowModal(false)}>Cancel</button>
+                                <button type="submit">Enroll</button>
+                                <button type="button" onClick={() => setShowModal(false)}>Cancel</button>
                             </div>
                         </form>
                     </div>

@@ -11,7 +11,11 @@ const scheduleApi = {
         }
     }),
     getAllSchedulesByDayOfWeek: (data) => axiosClient.get(`/v1/schedule/getAllSchedulesByDayOfWeek`, data),
-    getAllSchedulesByCourseId: (id) => axiosClient.get(`/v1/schedule/getAllSchedulesByCourseId/${id}`),
+    getAllSchedulesByCourseId: (courseId) => axiosClient.get(`/v1/schedule/getAllSchedulesByCourseId`, {
+        params: {
+            courseId: courseId,
+        }
+    }),
     deleteScheduleById: (id) => axiosClient.delete(`/v1/schedule/deleteScheduleById/${id}`),
     getAllSchedulesByStudentId: (studentId) => axiosClient.get(`v1/schedule/getAllSchedulesByStudentId`, {
         params: {
